@@ -112,6 +112,9 @@ const validateQueryParams = [
     .withMessage('Maximum price must be greater than or equal to 0'),
   handleValidationErrors
 ];
+
+
+
 //get spots owned by currnet user
 router.get('/current', requireAuth, async (req, res, next) => {
   try {
