@@ -7,7 +7,7 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.spotDetails);
-  const loggedInUser = useSelector((state) => state.session.user); // assuming you have loggedInUser in the state
+  const loggedInUser = useSelector((state) => state.session.user); 
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -20,7 +20,7 @@ const SpotDetails = () => {
       <h1>{spot.name}</h1>
       <p>Location: {spot.city}, {spot.state}, {spot.country}</p>
 
-      {/* Display Images */}
+      
       <div className="spot-images">
         <img src={spot.previewImage} alt={spot.name} className="large-image" />
         <div className="small-images">
@@ -30,20 +30,19 @@ const SpotDetails = () => {
         </div>
       </div>
 
-      {/* Host Information */}
+     
       <p>Hosted by {spot.owner.firstName} {spot.owner.lastName}</p>
 
-      {/* Spot Description */}
+     
       <p>{spot.description}</p>
 
-      {/* Review Summary */}
       <div className="review-summary">
         <h2>⭐ {spot.avgRating ? spot.avgRating.toFixed(1) : "New"}
           {spot.reviewCount > 0 && ` · ${spot.reviewCount} ${spot.reviewCount === 1 ? "Review" : "Reviews"}`}
         </h2>
       </div>
 
-      {/* Reviews */}
+      
       <div className="reviews">
         {spot.Reviews.length > 0 ? (
           spot.Reviews.map((review) => (
@@ -58,7 +57,7 @@ const SpotDetails = () => {
         )}
       </div>
 
-      {/* Callout Box */}
+     
       <div className="callout-box">
         <p><strong>${spot.price}</strong> / night</p>
         <button onClick={() => alert("Feature coming soon")}>Reserve</button>
