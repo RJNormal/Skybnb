@@ -7,6 +7,7 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.spotDetails);
+  const loggedInUser = useSelector((state) => state.session.user); // assuming you have loggedInUser in the state
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId));
@@ -34,6 +35,28 @@ const SpotDetails = () => {
 
       {/* Spot Description */}
       <p>{spot.description}</p>
+
+      {/* Review Summary */}
+      <div className="review-summary">
+        <h2>⭐ {spot.avgRating ? spot.avgRating.toFixed(1) : "New"}
+          {spot.reviewCount > 0 && ` · ${spot.reviewCount} ${spot.reviewCount === 1 ? "Review" : "Reviews"}`}
+        </h2>
+      </div>
+
+      {/* Reviews */}
+      <div className="reviews">
+        {spot.Reviews.length > 0 ? (
+          spot.Reviews.map((review) => (
+            <div key={review.id} className="review">
+              <h4>{review.User.firstName}</h4>
+              <p>{new Date(review.createdAt).toLocaleString('en-US', { month: 'long', year: 'numeric' })}</p>
+              <p>{review.review}</p>
+            </div>
+          ))
+        ) : (
+          loggedInUser?.id !== spot.ownerId && <p>Be the first to post a review!</p>
+        )}
+      </div>
 
       {/* Callout Box */}
       <div className="callout-box">

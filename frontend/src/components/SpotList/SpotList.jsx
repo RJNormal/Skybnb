@@ -5,14 +5,24 @@ import { useNavigate } from "react-router-dom";
 import "./SpotList.css";
 
 const SpotsList = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const spots = useSelector((state) => state.spots.allSpots || []);
 
-  useEffect(() => {
-    console.log("✅ SpotList component mounted!"); // Log when component loads
-    dispatch(fetchSpots());
-  }, [dispatch]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const spots = useSelector((state) => state.spots.allSpots);
+  
+    useEffect(() => {
+      dispatch(fetchSpots());
+    }, [dispatch]);
+  
+    console.log("🛠 Current spots in Redux:", spots);
+  
+    if (!spots || spots.length === 0) {
+      return <h2>No spots found. Try reloading.</h2>;
+    }
+
+
+ 
+
 
   return (
     <div className="spots-grid">
@@ -33,7 +43,7 @@ const SpotsList = () => {
       ))}
     </div>
   );
-};
+}
 
 export default SpotsList;
 
