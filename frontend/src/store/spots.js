@@ -27,6 +27,36 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
   dispatch(setSpotDetails(data));
 };
 
+const CREATE_SPOT = "spots/CREATE_SPOT";
+
+
+const createSpot = (spotData) => ({
+  type: CREATE_SPOT,
+  payload: spotData,
+});
+
+
+export const createSpotThunk = (spotData) => async (dispatch) => {
+  const response = await csrfFetch("/api/spots", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(spotData),
+  });
+
+  if (response.ok) {
+    const newSpot = await response.json();
+    dispatch(createSpot(newSpot));
+    return newSpot;
+  } else {
+    const errors = await response.json();
+    return Promise.reject(errors);
+  }
+};
+
+export { createSpot };
+
 
 let initialState = {
   byId: {}, 

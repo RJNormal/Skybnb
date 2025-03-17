@@ -11,6 +11,13 @@ function Navigation({ isLoaded }) {
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
+       {/* Show "Create a New Spot" button only if user is logged in */}
+       {sessionUser && (
+        <li>
+          <NavLink to="/spots/new">Create a New Spot</NavLink>
+        </li>
+      )}
+      
       {isLoaded && (
         <li>
           <ProfileButton user={sessionUser} />

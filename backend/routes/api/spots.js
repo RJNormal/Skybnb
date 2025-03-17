@@ -148,6 +148,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
   }
 });
 
+router.get("/new", (req, res, next) => {
+  res.json({ message: "New spot creation page" });
+});
+
 //GET DETAILS OF SPOT FROM SPOTID
 router.get('/:spotId', async (req, res, next) => {
   try {
@@ -296,6 +300,8 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 //Delete a Spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
