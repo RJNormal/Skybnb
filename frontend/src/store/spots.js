@@ -50,8 +50,8 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
     dispatch(createSpot(newSpot));
     return newSpot;
   } else {
-    const errors = await response.json();
-    return Promise.reject(errors);
+
+    throw new Error("Failed to Create Spot");
   }
 };
 
