@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import LoginFormPage from './components/LoginFormPage/LoginFormPage';
+import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Navigation from './components/Navigation/Navigation';
+import SpotList from './components/SpotList/SpotList';
+import SpotDetails from './components/SpotDetails/SpotDetails';
 import * as sessionActions from './store/sessions';
+import CreateSpot from './components/CreateSpot/CreateSpot';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -10,13 +13,14 @@ function Layout() {
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
+      setIsLoaded(true);
     });
   }, [dispatch]);
 
   return (
     <>
-      {isLoaded && <Outlet />}
+      <Navigation isLoaded={isLoaded} />
+      {isLoaded && <Outlet />} 
     </>
   );
 }
@@ -27,14 +31,20 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Welcome!</h1>
+        element: (
+          <>
+            <h1>The Sky is the Limit at Skybnb!</h1>
+            <SpotList /> 
+          </>
+        ),
+       
       },
-      {
-        path: '/login',
-        element: <LoginFormPage />
-      }
-    ]
-  }
+      { path: "/spots/:spotId", 
+        element: <SpotDetails /> },
+        { path: "/spots/new", 
+        element: <CreateSpot/> }
+    ], 
+  },
 ]);
 
 function App() {

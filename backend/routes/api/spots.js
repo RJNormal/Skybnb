@@ -112,6 +112,9 @@ const validateQueryParams = [
     .withMessage('Maximum price must be greater than or equal to 0'),
   handleValidationErrors
 ];
+
+
+
 //get spots owned by currnet user
 router.get('/current', requireAuth, async (req, res, next) => {
   try {
@@ -143,6 +146,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+});
+
+router.get("/new", (req, res, next) => {
+  res.json({ message: "New spot creation page" });
 });
 
 //GET DETAILS OF SPOT FROM SPOTID
@@ -293,6 +300,8 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 //Delete a Spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
