@@ -1,13 +1,12 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createSpotThunk } from "../../store/spots"; 
-import './CreateSpot.css';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { csrfFetch } from "../../store/csrf";
 
-const CreateSpot = () => {
-  const dispatch = useDispatch();
+const UpdateSpotForm = () => {
+  const { spotId } = useParams();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [spotData, setSpotData] = useState(null);
   const [formData, setFormData] = useState({
     country: "",
     address: "",
@@ -22,6 +21,24 @@ const CreateSpot = () => {
     image3: "",
     image4: "",
   });
+
+  useEffect(() => {
+    
+    fetch(`/api/spots/:spotID`)
+      .then(res => res.json())
+      .then(data => {
+        setSpotData(data);
+        setFormData({
+          country: data.country,
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          name: data.name,
+          description : data.description,
+          price: data.price,
+        });
+      });
+  }, [spotId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,53 +61,30 @@ const CreateSpot = () => {
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
-    const newSpot = {
-      country: formData.country,
-      address: formData.address,
-      city: formData.city,
-      state: formData.state,
-      description: formData.description,
-      name: formData.name,
-      price: parseFloat(formData.price),
-      lat: parseFloat(formData.lat) || 0,   
-      lng: parseFloat(formData.lng) || 0,   
-      previewImage: formData.previewImage,
-      images: [formData.image1, formData.image2, formData.image3, formData.image4].filter(img => img)
-    };
-
-    console.log("Creating spot with data:", newSpot); 
-
-    const createdSpot = await dispatch(createSpotThunk(newSpot)); 
     
-    console.log("Created spot response:", createdSpot); 
-    
-    if (createdSpot && createdSpot.id) {
-      navigate(`/spots/${createdSpot.id}`);
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      navigate(`/spots/${spotId}`);
     } else {
-      setErrors({ general: "Failed to create spot. Please try again." });
+      console.error("Failed to update spot.");
     }
   };
 
+  if (!spotData) return <p>Loading...</p>;
+
   return (
-    <div className="create-spot">
-      <h1>Create a New Spot</h1>
-      {Object.values(errors).length > 0 && (
-        <div className="errors">
-          {Object.values(errors).map((error, i) => <p key={i}>{error}</p>)}
-        </div>
-      )}
-      
-      
+    <div>
+      <h1>Update Your Spot</h1>
       <form onSubmit={handleSubmit}>
-  <h2>Where is your place located?</h2>
-  <p>Guests will only get your exact address once they book a reservation.</p>
-  
-  <input 
+      <input 
     type="text" 
     name="country" 
     placeholder="Country" 
@@ -151,56 +145,9 @@ const CreateSpot = () => {
     onChange={handleChange} 
   />
   {errors.price && <p className="error">{errors.price}</p>} 
-
-  <input 
-    type="text" 
-    name="previewImage" 
-    placeholder="Preview Image URL" 
-    value={formData.previewImage} 
-    onChange={handleChange} 
-  />
-  {errors.previewImage && <p className="error">{errors.previewImage}</p>} 
-
-  <input 
-    type="text" 
-    name="image1" 
-    placeholder="Image URL" 
-    value={formData.image1} 
-    onChange={handleChange} 
-  />
-  {errors.image1 && <p className="error">{errors.image1}</p>} 
-
-  <input 
-    type="text" 
-    name="image2" 
-    placeholder="Image URL" 
-    value={formData.image2} 
-    onChange={handleChange} 
-  />
-  {errors.image2 && <p className="error">{errors.image2}</p>} 
-
-  <input 
-    type="text" 
-    name="image3" 
-    placeholder="Image URL" 
-    value={formData.image3} 
-    onChange={handleChange} 
-  />
-  {errors.image3 && <p className="error">{errors.image3}</p>} 
-
-  <input 
-    type="text" 
-    name="image4" 
-    placeholder="Image URL" 
-    value={formData.image4} 
-    onChange={handleChange} 
-  />
-  {errors.image4 && <p className="error">{errors.image4}</p>} 
-
-  <button type="submit">Create Spot</button>
-</form>
+      </form>
     </div>
   );
 };
 
-export default CreateSpot;
+export default UpdateSpotForm;

@@ -8,7 +8,7 @@ const setSpots = (spots) => ({
 });
 
 export const fetchSpots = () => async (dispatch) => {
-  const response = await csrfFetch("/api/spots");
+  const response = await csrfFetch("/api/spots/");
   const data = await response.json();
   dispatch(setSpots(data.Spots));
   return response;
@@ -22,7 +22,7 @@ const setSpotDetails = (spot) => ({
 });
 
 export const fetchSpotDetails = (spotId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}`);
+  const response = await csrfFetch(`/api/spots/${spotId}/`);
   const data = await response.json();
   dispatch(setSpotDetails(data));
 };
@@ -46,35 +46,49 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
   });
 
   if (response.ok) {
-    const newSpot = await response.json();
-    dispatch(createSpot(newSpot));
-    return newSpot;
+    const spot = await response.json();
+    dispatch(createSpot(spot));
+    return spot; 
   } else {
-
-    throw new Error("Failed to Create Spot");
+    console.error("Error creating spot");
   }
 };
 
 export { createSpot };
 
+const DELETE_SPOT = "spots/DELETE_SPOT";
+
+const deleteSpotAction = (spotId) => ({
+  type: DELETE_SPOT,
+  spotId,
+});
+
+export const deleteSpot = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "DELETE",
+  });
+
+  if (response.ok) {
+    dispatch(deleteSpotAction(spotId));
+  }
+};
+
 
 let initialState = {
   byId: {}, 
   allSpots: [], 
-  spotDetails: null, 
 };
 
 
 export const spotsReducer = (state = initialState, action) => {
   let newState;
 
-  console.log("here is state!");
-  console.log(state);
+ 
+
 
   switch (action.type) {
     case SET_SPOTS:
-      console.log("State before action:", state);
-      console.log("Action payload:", action.payload);
+ 
       newState = { ...state };
 
       let spots = action.payload;
@@ -88,15 +102,9 @@ export const spotsReducer = (state = initialState, action) => {
         newById[spot.id] = spot;
       }
 
-      console.log("here is new state with all spots:", newState);
+  
       return newState;
 
-    case SET_SPOT_DETAILS:
-      console.log("Setting Spot Details with data:", action.payload);
-      return {
-        ...state,
-        spotDetails: action.payload, 
-      };
 
     default:
       return state;

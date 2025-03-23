@@ -14,7 +14,7 @@ const SpotsList = () => {
       dispatch(fetchSpots());
     }, [dispatch]);
   
-    console.log("🛠 Current spots in Redux:", spots);
+ 
   
     if (!spots || spots.length === 0) {
       return <h2>No spots found. Try reloading.</h2>;
@@ -30,7 +30,7 @@ const SpotsList = () => {
         <div 
           key={spot.id} 
           className="spot-tile"
-          onClick={() => navigate.push(`/spots/${spot.id}`)}
+          onClick={() => navigate(`/spots/${spot.id}`)}
           title={spot.name} 
         >
           <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
