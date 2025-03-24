@@ -1,0 +1,49 @@
+.navbar-logo img {
+    height: 50px;  /* Set a fixed height */
+    max-width: 150px;  /* Prevent it from getting too wide */
+    width: auto;  /* Maintain aspect ratio */
+    cursor: pointer;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    height: 70px;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  
+  /* Navbar Menu (Right Side) */
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+  }
+  
+  /* Navigation Links */
+  .nav-link {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background 0.3s;
+    align-items: center;
+  }
+  
+  .nav-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-button{
+    align-items: center;
+   padding-top: 100px;
+  }
+  

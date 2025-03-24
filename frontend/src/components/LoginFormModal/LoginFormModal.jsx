@@ -24,7 +24,8 @@ function LoginFormModal() {
       });
   };
   const handleDemoLogin = async () => {
-    await dispatch(sessionActions.login({ credential: "demo@user.com", password: "password" }));
+    await dispatch(sessionActions.login({ credential: "JohnSmith", password: "secret password" }));
+    closeModal();
   };
 
   return (

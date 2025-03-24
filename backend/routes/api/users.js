@@ -56,6 +56,8 @@ router.post('/', validateSignup, async (req, res) => {
   const hashedPassword = bcrypt.hashSync(password);
   const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
+  
+
   const safeUser = {
     id: user.id,
     firstName: user.firstName,
@@ -70,6 +72,7 @@ router.post('/', validateSignup, async (req, res) => {
     user: safeUser
   });
 }
+
 
 );
 module.exports = router;

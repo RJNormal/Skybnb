@@ -5,6 +5,8 @@ import * as sessionActions from '../../store/sessions';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import { NavLink } from 'react-router-dom';
+import './ProfileButton.css'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -41,9 +43,9 @@ function ProfileButton({ user }) {
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
-    <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+    <div className="profile-container">
+      <button onClick={toggleMenu} className="profile-button">
+        <FaUserCircle size={24} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -52,29 +54,39 @@ function ProfileButton({ user }) {
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={logout}>Log Out</button>
+            <button onClick={logout}>Log Out</button>
             </li>
+            {user && (
+          <NavLink to="/spots/manage" className="nav-link">
+            Manage Spots
+          </NavLink>
+          
+        )}
+         {user && (
+          <NavLink to= "reviews/manage" className="nav-link">
+            Manage Reviews
+          </NavLink>
+          
+        )}
           </>
         ) : (
           <>
             <li>
               <OpenModalButton
                 buttonText="Log In"
-                onButtonClick={closeMenu}
                 modalComponent={<LoginFormModal />}
               />
             </li>
             <li>
               <OpenModalButton
                 buttonText="Sign Up"
-                onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
             </li>
           </>
         )}
       </ul>
-    </>
+    </div>
   );
 }
 

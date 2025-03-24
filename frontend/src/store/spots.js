@@ -14,18 +14,21 @@ export const fetchSpots = () => async (dispatch) => {
   return response;
   };
 
-const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
+  export const fetchUserSpots = (sessionUser) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/`);
+    const data = await response.json();
+    console.log("Fetched spots data:", data); 
+  
+   
+    const userSpots = data.Spots.filter(spot => spot.ownerId === sessionUser.id);
+    console.log("Filtered user spots:", userSpots);
+   
+    dispatch(setSpots(userSpots));
+    
+    return response;
+  }
 
-const setSpotDetails = (spot) => ({
-  type: SET_SPOT_DETAILS,
-  spot,
-});
 
-export const fetchSpotDetails = (spotId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}/`);
-  const data = await response.json();
-  dispatch(setSpotDetails(data));
-};
 
 const CREATE_SPOT = "spots/CREATE_SPOT";
 
@@ -56,6 +59,8 @@ export const createSpotThunk = (spotData) => async (dispatch) => {
 
 export { createSpot };
 
+
+
 const DELETE_SPOT = "spots/DELETE_SPOT";
 
 const deleteSpotAction = (spotId) => ({
@@ -74,6 +79,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 };
 
 
+
 let initialState = {
   byId: {}, 
   allSpots: [], 
@@ -87,8 +93,7 @@ export const spotsReducer = (state = initialState, action) => {
 
 
   switch (action.type) {
-    case SET_SPOTS:
- 
+  case SET_SPOTS: {
       newState = { ...state };
 
       let spots = action.payload;
@@ -101,10 +106,9 @@ export const spotsReducer = (state = initialState, action) => {
       for (let spot of spots) {
         newById[spot.id] = spot;
       }
+      return newState;  
 
-  
-      return newState;
-
+    }
 
     default:
       return state;

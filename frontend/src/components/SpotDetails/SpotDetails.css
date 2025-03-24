@@ -1,38 +1,75 @@
-.spots-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+
+
+.spots-details {
+  gap: 20px;
+  padding: 100px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.spot-tile {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  background: #fff;
+}
+
+.spot-tile:hover {
+  transform: scale(1.05);
+}
+
+.spot-thumbnail {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #ccc;
+}
+
+.spot-info {
+  padding: 10px;
+  text-align: center;
+}
+
+.spot-info p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.spot-rating {
+  font-weight: bold;
+}
+
+.spot-price {
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .spots-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
-  
-  .spot-tile {
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .spots-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
-  
-  .spot-tile:hover {
-    transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .spot-thumbnail {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .spot-info {
-    padding: 10px;
-  }
-  
-  .spot-rating {
-    font-weight: bold;
-    color: #ffcc00;
-  }
-  
-  .spot-price {
-    font-size: 1rem;
-    font-weight: bold;
-  }
+}
+
+.spot-images img {
+  max-width: 100%;
+  height: auto;
+}
+
+.small-images img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}

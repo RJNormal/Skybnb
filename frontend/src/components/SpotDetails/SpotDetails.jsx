@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { deleteSpot } from "../../store/spots"; // Import deleteSpot action
-import DeleteModal from "../SpotManagement/DeleteModal"; // Import delete modal
-import { useNavigate } from "react-router-dom";
+import ReviewForm from "../ReviewManagement/ReviewForm";
 import './SpotDetails.css'
 
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const [spot, setSpot] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const userReviews = useSelector(state => state.reviews.userReviews);
+  const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     const fetchSpot = async () => {
@@ -29,6 +27,7 @@ const SpotDetails = () => {
   
         const data = await response.json();
         setSpot(data); 
+        console.log(data)
       } catch (err) {
         console.error("Error fetching spot:", err);
       }
@@ -39,14 +38,37 @@ const SpotDetails = () => {
     fetchSpot();
   }, [spotId]);
 
-  const handleDelete = async () => {
-    await dispatch(deleteSpot(spotId));
-    setShowDeleteModal(false);
-    navigate("/"); // Redirect after deletion
-  };
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setIsLoaded(false); 
+
+      try {
+        const response = await fetch(`/api/spots/${spotId}/reviews`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch review details"); 
+        }
+
+        const data = await response.json();
+        console.log("Fetched data: ", data); 
+        setReviews(data.Reviews); 
+
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+      }
+
+      setIsLoaded(true); 
+    };
+
+    fetchReviews();
+}, [spotId]);
+
+ 
 
   if (!isLoaded) return <h2>Loading...</h2>;
   if (!spot || Object.keys(spot).length === 0) return <h2>Spot not found</h2>;
+  
+  const hasReviewed = userReviews.some(review => review.spotId === spot.id);
+  const isOwner = sessionUser?.id === spot.ownerId;
 
   return (
     <div className="spot-details">
@@ -66,46 +88,64 @@ const SpotDetails = () => {
       <p>{spot.description}</p>
 
       <div className="review-summary">
-        <h2>⭐ {spot.avgRating ? spot.avgRating.toFixed(1) : "New"}
-          {spot.reviewCount > 0 && ` · ${spot.reviewCount} ${spot.reviewCount === 1 ? "Review" : "Reviews"}`}
-        </h2>
-      </div>
+  <h2>
+    ⭐
+    {(() => {
+      if (spot.avgStarRating && spot.avgStarRating > 0) {
+        return spot.avgStarRating.toFixed(1);
+      } else {
+        return "New";
+      }
+    })()}
+    {(() => {
+      if (spot.numReviews > 0) {
+        return ` · ${spot.numReviews} ${spot.numReviews === 1 ? "Review" : "Reviews"}`;
+      } else {
+        return "";
+      }
+    })()}
+  </h2>
+</div>
 
-      <div className="reviews">
-        {spot.Reviews?.length > 0 ? (
-          spot.Reviews.map((review) => (
-            <div key={review.id} className="review">
-              <h4>{review.User?.firstName}</h4>
-              <p>{new Date(review.createdAt).toLocaleString('en-US', { month: 'long', year: 'numeric' })}</p>
-              <p>{review.review}</p>
-            </div>
-          ))
-        ) : (
-          <p>Be the first to post a review!</p>
-        )}
-      </div>
+<div className="reviews">
+  {isLoaded ? (
+    reviews.length > 0 ? (
+      reviews.map((review) => (
+        <div key={review.id} className="review">
+          <h4>{review.User?.firstName} {review.User?.lastName}</h4>
+          <p>
+            {new Date(review.createdAt).toLocaleString('en-US', {
+              month: 'long',
+              year: 'numeric',
+            })}
+          </p>
+          <p>{review.review}</p>
+        </div>
+      ))
+    ) : (
+      <p>Be the first to post a review!</p>
+    )
+  ) : (
+    <p>Loading reviews...</p>
+  )}
+</div>
+<div>
+      {sessionUser && !isOwner && !hasReviewed && (
+        <button onClick={() => setShowModal(true)}>Post Your Review</button>
+      )}
+
+      {showModal && (
+        <div className="modal">
+          <ReviewForm spotId={spot.id} closeModal={() => setShowModal(false)} />
+        </div>
+      )}
+    </div>
 
       <div className="callout-box">
         <p><strong>${spot.price}</strong> / night</p>
         <button onClick={() => alert("Feature coming soon")}>Reserve</button>
       </div>
-      {/* DELETE BUTTON (Visible only to the spot owner) */}
-      {sessionUser && spot.ownerId === sessionUser.id && (
-        <button onClick={() => setShowDeleteModal(true)} className="delete-button">
-          Delete Spot
-        </button>
-      )}
 
-      {showDeleteModal && (
-        <DeleteModal
-          title="Confirm Delete"
-          message="Are you sure you want to remove this spot?"
-          onConfirm={handleDelete}
-          onCancel={() => setShowDeleteModal(false)}
-        />
-      )}
-
-   <button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Update</button>
     </div>
   );
 };

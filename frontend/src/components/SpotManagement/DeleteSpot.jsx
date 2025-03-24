@@ -1,8 +1,8 @@
 import { useState,useDispatch } from "react";
-import { deleteSpotAction } from "../../store/spots"; 
+import { deleteSpotAction } from "../../store/spots.js"; 
 import DeleteModal from "./DeleteModal.jsx";
 
-const SpotManagement = ({ spots, user }) => {
+const DeleteSpot = ({ spots, user }) => {
   const dispatch = useDispatch();
   const [selectedSpot, setSelectedSpot] = useState(null);
 
@@ -35,4 +35,4 @@ const SpotManagement = ({ spots, user }) => {
   );
 };
 
-export default SpotManagement;
+export default DeleteSpot;
