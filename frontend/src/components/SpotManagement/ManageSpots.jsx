@@ -92,8 +92,10 @@ const ManageSpots = () => {
               <div className="spot-info">
                 <p>{spot.city}, {spot.state}</p>
                 <p className="spot-rating">
-                  {spot.avgRating ? `⭐ ${spot.avgRating.toFixed(1)}` : "New"}
-                </p>
+  {spot.avgRating != null && !isNaN(spot.avgRating) 
+    ? `⭐ ${spot.avgRating.toFixed(1)}`
+    : "New"}
+</p>
                 <p className="spot-price">${spot.price} / night</p>
               </div>
             </div>
