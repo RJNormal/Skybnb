@@ -14,7 +14,7 @@ const SpotsList = () => {
       dispatch(fetchSpots());
     }, [dispatch]);
   
-    console.log("🛠 Current spots in Redux:", spots);
+ 
   
     if (!spots || spots.length === 0) {
       return <h2>No spots found. Try reloading.</h2>;
@@ -30,13 +30,22 @@ const SpotsList = () => {
         <div 
           key={spot.id} 
           className="spot-tile"
-          onClick={() => navigate.push(`/spots/${spot.id}`)}
+          onClick={() => navigate(`/spots/${spot.id}`)}
           title={spot.name} 
         >
           <img src={spot.previewImage} alt={spot.name} className="spot-thumbnail" />
+          <div className="tooltip">{spot.name}</div>
           <div className="spot-info">
             <p>{spot.city}, {spot.state}</p>
-            <p className="spot-rating">{spot.avgRating === "New" ? "New" : `⭐ ${spot.avgRating}`}</p>
+            <p className="spot-rating">
+            {(() => {
+             if (spot.avgRating == null || isNaN(spot.avgRating)) {
+             return "New";
+             } else {
+            return `⭐ ${spot.avgRating.toFixed(1)}`;
+              }
+             })()}
+            </p>
             <p className="spot-price">${spot.price} / night</p>
           </div>
         </div>

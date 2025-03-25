@@ -23,6 +23,10 @@ function LoginFormModal() {
         }
       });
   };
+  const handleDemoLogin = async () => {
+    await dispatch(sessionActions.login({ credential: "JohnSmith", password: "secret password" }));
+    closeModal();
+  };
 
   return (
     <>
@@ -49,8 +53,11 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={credential.length < 4 || password.length < 6}>
+  Log In
+</button>
       </form>
+      <button className='dmemo' onClick={handleDemoLogin}>Demo Login</button>
     </>
   );
 }

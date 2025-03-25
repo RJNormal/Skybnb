@@ -41,6 +41,9 @@ function SignupFormModal() {
     });
   };
 
+  const isFormValid = email && username && firstName && lastName && password && confirmPassword && password === confirmPassword;
+
+
   return (
     <>
       <h1>Sign Up</h1>
@@ -107,7 +110,7 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={!isFormValid}>Sign Up</button>
       </form>
     </>
   );

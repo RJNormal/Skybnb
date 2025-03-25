@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;  /* Ensure it does not exceed the screen width */
+}
+ 
+  .navbar-logo img {
+    height: 50px;
+    width: auto;
+    max-width: 150px;
+    cursor: pointer;
+  }
+  
+ 
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+ 
+  .nav-link {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px; 
+  }
+  
+  .nav-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+

@@ -1,0 +1,103 @@
+.create-spot-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .create-spot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+  }
+
+
+  body {
+    padding-top: 70px;
+  }
+  
+  .create-spot h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  
+
+  .create-spot-form {
+    max-width: 600px;
+    margin: 80px auto 40px;
+    padding: 20px;
+    background: #801212;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .create-spot h2 {
+    font-size: 18px;
+    margin-top: 20px;
+    color: #333;
+  }
+  
+  .create-spot p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+ 
+  .create-spot input,
+  .create-spot textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .create-spot textarea {
+    height: 100px;
+    resize: none;
+  }
+  
+ 
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .errors {
+    background: #ffebeb;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid red;
+    margin-bottom: 15px;
+  }
+  
+ 
+  .create-spot button {
+    width: 100%;
+    padding: 12px;
+    background: #ff385c;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .create-spot button:hover {
+    background: #e0244d;
+  }
+  

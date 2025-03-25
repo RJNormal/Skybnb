@@ -6,6 +6,10 @@ import SpotList from './components/SpotList/SpotList';
 import SpotDetails from './components/SpotDetails/SpotDetails';
 import * as sessionActions from './store/sessions';
 import CreateSpot from './components/CreateSpot/CreateSpot';
+import ManageSpots from './components/SpotManagement/ManageSpots';
+import ManageReviews from './components/ReviewManagement/ManageReviews';
+
+
 
 function Layout() {
   const dispatch = useDispatch();
@@ -42,7 +46,11 @@ const router = createBrowserRouter([
       { path: "/spots/:spotId", 
         element: <SpotDetails /> },
         { path: "/spots/new", 
-        element: <CreateSpot/> }
+        element: <CreateSpot/> },
+        { path: "/spots/manage",
+        element: <ManageSpots/> },
+        {path: "/reviews/manage",
+         element: <ManageReviews />  }
     ], 
   },
 ]);
