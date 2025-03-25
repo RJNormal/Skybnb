@@ -38,7 +38,7 @@ const SpotsList = () => {
           <div className="spot-info">
             <p>{spot.city}, {spot.state}</p>
             <p className="spot-rating">
-            {spot.avgRating != null && !isNaN(spot.avgRating)  ? `⭐ ${spot.avgRating}`   : "New"}
+            {spot.avgRating != null && !isNaN(spot.avgRating) ? `⭐ ${Math.round(spot.avgRating * 10) / 10}` : "New"}
             </p>
             <p className="spot-price">${spot.price} / night</p>
           </div>
