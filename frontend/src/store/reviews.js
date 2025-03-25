@@ -70,7 +70,8 @@ export const updateReview = (reviewId, reviewData) => async (dispatch) => {
 
   if (response.ok) {
     const updatedReview = await response.json();
-    dispatch({ type: UPDATE_REVIEW, payload: updatedReview });  // Use `payload` for consistency
+    console.log('Updated Review:', updatedReview);
+    dispatch({ type: UPDATE_REVIEW, payload: updatedReview }); 
   }
 };
 
@@ -97,7 +98,7 @@ const reviewsReducer = (state = initialState, action) => {
         return {
           ...state,
           userReviews: state.userReviews.map(review =>
-            review.id === action.review.id ? action.review : review
+            review.id === action.payload.id ? action.payload : review
           ),
         };
 
