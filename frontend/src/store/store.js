@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import sessionReducer from './sessions';
 import { spotsReducer } from './spots';
-import reviewsReducer from './reviews,js';
+import reviewsReducer from './reviews.js';
 
 
 

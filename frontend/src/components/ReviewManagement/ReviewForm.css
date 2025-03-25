@@ -1,0 +1,106 @@
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .star {
+    font-size: 2rem;
+    color: #ccc; /* Grey color for empty stars */
+    cursor: pointer;
+  }
+  
+  .star.filled {
+    color: gold; /* Yellow color for filled stars */
+  }
+  
+  .star:hover,
+  .star:focus {
+    color: orange; /* Change color when hovering over a star */
+  }
+
+  .review-modal {
+    background-color: white;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 8px;
+    border: 1px solid #ddd; /* Light gray border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .review-modal h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+  }
+  
+  .review-modal textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .review-modal .star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .review-modal .star {
+    font-size: 30px;
+    color: #ccc;
+    cursor: pointer;
+  }
+  
+  .review-modal .star.filled {
+    color: #f39c12; /* Gold color for filled stars */
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  button.cancel-button {
+    background-color: #f44336; /* Red for cancel button */
+    color: white;
+  }
+  
+  button.cancel-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+  }
+  
+  button.submit-button {
+    background-color: #4CAF50; /* Green for submit button */
+    color: white;
+  }
+  
+  button.submit-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }

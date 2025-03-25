@@ -48,7 +48,7 @@ const DELETE_REVIEW = "reviews/DELETE_REVIEW";
 
 
 export const deleteReview = (reviewId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/reviews/${reviewId} `,
+  const response = await csrfFetch(`/api/reviews/${reviewId}`,
    { method: "DELETE", 
    headers: {
     'Content-Type': 'application/json',
@@ -57,6 +57,20 @@ export const deleteReview = (reviewId) => async (dispatch) => {
 
   if (response.ok) {
     dispatch({ type: DELETE_REVIEW, payload: reviewId });
+  }
+};
+const UPDATE_REVIEW = "reviews/UPDATE_REVIEW";
+
+export const updateReview = (reviewId, reviewData) => async (dispatch) => {
+  const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(reviewData),
+  });
+
+  if (response.ok) {
+    const updatedReview = await response.json();
+    dispatch({ type: UPDATE_REVIEW, payload: updatedReview });  // Use `payload` for consistency
   }
 };
 
@@ -78,6 +92,16 @@ const reviewsReducer = (state = initialState, action) => {
         ...state,
         userReviews: [action.payload, ...state.userReviews], 
       };
+
+      case UPDATE_REVIEW:
+        return {
+          ...state,
+          userReviews: state.userReviews.map(review =>
+            review.id === action.review.id ? action.review : review
+          ),
+        };
+
+      
 
     default:
       return state;

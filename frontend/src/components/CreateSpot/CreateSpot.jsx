@@ -8,6 +8,8 @@ const CreateSpot = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const imageRegex = /\.(jpg|jpeg|png)$/i;
+  const imageFields = ['image1', 'image2', 'image3', 'image4'];
   const [formData, setFormData] = useState({
     country: "",
     address: "",
@@ -40,10 +42,16 @@ const CreateSpot = () => {
       validationErrors.price = "Price must be a positive number.";
     if (!formData.previewImage.trim())
       validationErrors.previewImage = "A preview image URL is required.";
+        imageFields.forEach((field) => {
+    if (formData[field] && !imageRegex.test(formData[field])) {
+      validationErrors[field] = 'Image URL needs to end in png, jpg, or jpeg';
+    }
+  });
 
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,8 +67,8 @@ const CreateSpot = () => {
       price: parseFloat(formData.price),
       lat: parseFloat(formData.lat) || 0,   
       lng: parseFloat(formData.lng) || 0,   
-      previewImage: formData.previewImage,
-      images: [formData.image1, formData.image2, formData.image3, formData.image4].filter(img => img)
+      previewImage: formData.previewImage,  
+      images: [formData.image1, formData.image2, formData.image3, formData.image4].filter(img => img)  
     };
 
     console.log("Creating spot with data:", newSpot); 
@@ -77,6 +85,7 @@ const CreateSpot = () => {
   };
 
   return (
+    <div className="create-spot-wrapper">
     <div className="create-spot">
       <h1>Create a New Spot</h1>
       {Object.values(errors).length > 0 && (
@@ -199,6 +208,7 @@ const CreateSpot = () => {
 
   <button type="submit">Create Spot</button>
 </form>
+    </div>
     </div>
   );
 };

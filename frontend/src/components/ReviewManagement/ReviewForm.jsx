@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addReview } from "../../store/reviews,js";
+import { addReview } from "../../store/reviews.js";
+import './ReviewForm.css'
 
 const ReviewForm = ({ spotId, closeModal }) => {
   const dispatch = useDispatch();
@@ -13,12 +14,17 @@ const ReviewForm = ({ spotId, closeModal }) => {
     
     const newReview = { review, stars };
     const response = await dispatch(addReview(spotId, newReview));
+    window.location.reload
 
     if (response?.errors) {
       setErrors(response.errors);
     } else {
       closeModal();
     }
+  };
+
+  const handleStarClick = (rating) => {
+    setStars(rating);  // Set the star rating based on the clicked star
   };
 
   return (
@@ -32,23 +38,35 @@ const ReviewForm = ({ spotId, closeModal }) => {
         onChange={(e) => setReview(e.target.value)}
       />
       
-      <label>
-        Stars:
-        <input
-          type="number"
-          min="1"
-          max="5"
-          value={stars}
-          onChange={(e) => setStars(Number(e.target.value))}
-        />
-      </label>
+      <div className="star-rating">
+        {[1, 2, 3, 4, 5].map((rating) => (
+          <span
+            key={rating}
+            className={`star ${stars >= rating ? 'filled' : ''}`}
+            onClick={() => handleStarClick(rating)}  // Set rating when clicked
+            role="button"
+            aria-label={`Rate ${rating} stars`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
 
-      <button 
-        onClick={handleSubmit} 
-        disabled={review.length < 10 || stars < 1}
-      >
-        Submit Your Review
-      </button>
+      <div className="button-group">
+        <button 
+          onClick={handleSubmit} 
+          disabled={review.length < 10 || stars < 1}
+        >
+          Submit Your Review
+        </button>
+
+        <button 
+          onClick={closeModal}  // Close the modal without submitting
+          className="cancel-button"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };

@@ -5,13 +5,14 @@ import * as sessionActions from '../../store/sessions';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
-import { NavLink } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import './ProfileButton.css'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const navigate = useNavigate()
 
   const toggleMenu = (e) => {
     e.stopPropagation(); 
@@ -38,36 +39,40 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/')
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+
   return (
-    <div className="profile-container">
+    <div>
       <button onClick={toggleMenu} className="profile-button">
         <FaUserCircle size={24} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
-            <li>
+            
+            {user && (
+  <li>
+    <button className="nav-button" onClick={() => navigate('/spots/manage')}>
+      Manage Spots
+    </button>
+  </li>
+)}
+{user && (
+  <li>
+    <button className="nav-button" onClick={() => navigate('/reviews/manage')}>
+      Manage Reviews
+    </button>
+  </li>
+)}
+<li>
             <button onClick={logout}>Log Out</button>
             </li>
-            {user && (
-          <NavLink to="/spots/manage" className="nav-link">
-            Manage Spots
-          </NavLink>
-          
-        )}
-         {user && (
-          <NavLink to= "reviews/manage" className="nav-link">
-            Manage Reviews
-          </NavLink>
-          
-        )}
           </>
         ) : (
           <>
