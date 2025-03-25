@@ -38,11 +38,14 @@ const SpotsList = () => {
           <div className="spot-info">
             <p>{spot.city}, {spot.state}</p>
             <p className="spot-rating">
-  {spot.avgRating == null || isNaN(Number(spot.avgRating))
-    ? "New"
-    : `⭐ ${Number(spot.avgRating).toFixed(1)}`
-  }
-</p>
+            {(() => {
+             if (spot.avgRating == null || isNaN(spot.avgRating)) {
+             return "New";
+             } else {
+            return `⭐ ${spot.avgRating.toFixed(1)}`;
+              }
+             })()}
+            </p>
             <p className="spot-price">${spot.price} / night</p>
           </div>
         </div>
