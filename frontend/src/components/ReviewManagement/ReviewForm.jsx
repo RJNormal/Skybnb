@@ -24,7 +24,7 @@ const ReviewForm = ({ spotId, closeModal }) => {
   };
 
   const handleStarClick = (rating) => {
-    setStars(rating);  // Set the star rating based on the clicked star
+    setStars(rating);  
   };
 
   return (
@@ -43,7 +43,7 @@ const ReviewForm = ({ spotId, closeModal }) => {
           <span
             key={rating}
             className={`star ${stars >= rating ? 'filled' : ''}`}
-            onClick={() => handleStarClick(rating)}  // Set rating when clicked
+            onClick={() => handleStarClick(rating)}  
             role="button"
             aria-label={`Rate ${rating} stars`}
           >
@@ -61,7 +61,7 @@ const ReviewForm = ({ spotId, closeModal }) => {
         </button>
 
         <button 
-          onClick={closeModal}  // Close the modal without submitting
+          onClick={closeModal}  
           className="cancel-button"
         >
           Cancel

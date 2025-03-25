@@ -3,28 +3,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserReviews, updateReview } from "../../store/reviews.js";
 import { deleteReview } from "../../store/reviews.js";
 import './ManageReviews.css'
+import { fetchSpots } from "../../store/spots";
+
 
 
 const ManageReviews = () => {
   const dispatch = useDispatch();
   const userReviews = useSelector((state) => state.reviews.userReviews);
   const [errors, setErrors] = useState([]);
+  const spots = useSelector((state) => state.spots.allSpots);
   const [reviewToDelete, setReviewToDelete] = useState(null);
   const [reviewToEdit, setReviewToEdit] = useState(null);
   const [updatedReview, setUpdatedReview] = useState("");
   const [updatedStars, setUpdatedStars] = useState(1);
 
   useEffect(() => {
+    dispatch(fetchSpots());
+  }, [dispatch]);
+
+
+
+  useEffect(() => {
     dispatch(fetchUserReviews())
       .catch((error) => {
-        setErrors([error.message]); // If fetch fails, set error
+        setErrors([error.message]); 
       });
   }, [dispatch]);
 
   const handleDelete = (reviewId) => {
     dispatch(deleteReview(reviewId))
       .catch((error) => {
-        setErrors([error.message]); // If delete fails, set error
+        setErrors([error.message]); 
       });
     setReviewToDelete(null);
   };
@@ -35,7 +44,6 @@ const ManageReviews = () => {
         setReviewToEdit(null);
         setUpdatedReview("");
         setUpdatedStars(1);
-        window.location.reload()
       });
   };
 
@@ -44,19 +52,25 @@ const ManageReviews = () => {
       <h2>Manage Your Reviews</h2>
       {userReviews.length > 0 ? (
         <ul>
-          {userReviews.map((review) => (
-            <li key={review.id}>
-              <h3>{review.Spot.name}</h3>
-              <p>Review: {review.review}</p>
-              <p>Stars: {review.stars}</p>
-              <button onClick={() => setReviewToDelete(review.id)}>Delete</button>
-              <button onClick={() => {
-                setReviewToEdit(review.id);
-                setUpdatedReview(review.review);
-                setUpdatedStars(review.stars);
-              }}>Edit</button>
-            </li>
-          ))}
+          {userReviews.map((review) => {
+            
+            const spot = spots.find((spot) => spot.id === review.spotId);
+
+            return (
+              <li key={review.id}>
+                {/* Render spot name if found */}
+                <h3>{spot ? spot.name : 'No spot found'}</h3>
+                <p>Review: {review.review}</p>
+                <p>Stars: {review.stars}</p>
+                <button onClick={() => setReviewToDelete(review.id)}>Delete</button>
+                <button onClick={() => {
+                  setReviewToEdit(review.id);
+                  setUpdatedReview(review.review);
+                  setUpdatedStars(review.stars);
+                }}>Edit</button>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p>You have not posted any reviews yet.</p>
@@ -77,51 +91,51 @@ const ManageReviews = () => {
         </div>
       )}
 
-{reviewToEdit && (
-  <div className="modal">
-    <div className="modal-content">
-    <h2>Update Your Review</h2>
-    {errors.length > 0 && <ul>{errors.map((err, i) => <li key={i}>{err}</li>)}</ul>}
+      {reviewToEdit && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Update Your Review</h2>
+            {errors.length > 0 && <ul>{errors.map((err, i) => <li key={i}>{err}</li>)}</ul>}
 
-    <textarea
-      value={updatedReview}
-      onChange={(e) => setUpdatedReview(e.target.value)}
-      placeholder="Update your review here..."
-    />
-    
-    <div className="star-rating">
-      {[1, 2, 3, 4, 5].map((rating) => (
-        <span
-          key={rating}
-          className={`star ${updatedStars >= rating ? 'filled' : ''}`}
-          onClick={() => setUpdatedStars(rating)}  // Update rating when clicked
-          role="button"
-          aria-label={`Rate ${rating} stars`}
-        >
-          ★
-        </span>
-      ))}
-    </div>
+            <textarea
+              value={updatedReview}
+              onChange={(e) => setUpdatedReview(e.target.value)}
+              placeholder="Update your review here..."
+            />
+            
+            <div className="star-rating">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <span
+                  key={rating}
+                  className={`star ${updatedStars >= rating ? 'filled' : ''}`}
+                  onClick={() => setUpdatedStars(rating)}  
+                  role="button"
+                  aria-label={`Rate ${rating} stars`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
 
-    <button
-      className="update-button"
-      onClick={(e) => {
-        e.preventDefault();
-        handleUpdate(reviewToEdit); // Update review when form is submitted
-      }}
-    >
-      Update Review
-    </button>
-    
-    <button
-      className="cancel-button"
-      onClick={() => setReviewToEdit(null)}
-    >
-      Cancel
-    </button>
-  </div>
-  </div>
-)}
+            <button
+              className="update-button"
+              onClick={(e) => {
+                e.preventDefault();
+                handleUpdate(reviewToEdit); 
+              }}
+            >
+              Update Review
+            </button>
+            
+            <button
+              className="cancel-button"
+              onClick={() => setReviewToEdit(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
