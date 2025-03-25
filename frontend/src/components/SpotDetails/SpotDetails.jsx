@@ -121,8 +121,8 @@ const handleUpdate = async (reviewId) => {
     <h2>
       ⭐
       {(() => {
-        if (spot.avgStarRating && spot.avgStarRating > 0) {
-          return spot.avgStarRating.toFixed(1);
+         if (spot.avgStarRating && spot.avgStarRating > 0) {
+          return Math.round(spot.avgStarRating * 10) / 10; 
         } else {
           return "New";
         }
@@ -145,8 +145,8 @@ const handleUpdate = async (reviewId) => {
   <h2>
     ⭐
     {(() => {
-      if (spot.avgStarRating && spot.avgStarRating > 0) {
-        return spot.avgStarRating.toFixed(1);
+       if (spot.avgStarRating && spot.avgStarRating > 0) {
+        return Math.round(spot.avgStarRating * 10) / 10; 
       } else {
         return "New";
       }
