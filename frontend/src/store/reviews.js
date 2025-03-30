@@ -22,6 +22,28 @@ export const fetchUserReviews = () => async (dispatch) => {
   }
 };
 
+const GET_SPOT_REVIEWS = "reviews/GET_SPOT_REVIEWS";
+
+const getSpotReviews = (reviews) => ({
+  type: GET_SPOT_REVIEWS,
+  payload: reviews,
+});
+
+export const fetchSpotReviews = (spotId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/spots/${spotId}/reviews`);
+
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(getSpotReviews(data.Reviews));  
+    } else {
+      console.error("Failed to fetch spot reviews.");
+    }
+  } catch (error) {
+    console.error("Error fetching spot reviews:", error);
+  }
+};
+
 
 
 const ADD_REVIEW = "reviews/ADD_REVIEW";
@@ -101,6 +123,9 @@ const reviewsReducer = (state = initialState, action) => {
             review.id === action.payload.id ? action.payload : review
           ),
         };
+
+        case GET_SPOT_REVIEWS:
+          return { ...state, [action.spotId]: action.payload };
 
       
 

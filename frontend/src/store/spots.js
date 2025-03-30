@@ -110,6 +110,19 @@ export const spotsReducer = (state = initialState, action) => {
 
     }
 
+    case CREATE_SPOT: {
+      const newState = { ...state, [action.payload.id]: action.payload };
+      return newState;
+    }
+
+    case DELETE_SPOT: {
+      const newState = { ...state };
+      delete newState[action.spotId];
+      return newState;
+    }
+
+    
+
     default:
       return state;
   }

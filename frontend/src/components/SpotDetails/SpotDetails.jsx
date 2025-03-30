@@ -3,14 +3,14 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReviewForm from "../ReviewManagement/ReviewForm";
-import { fetchUserReviews, deleteReview, updateReview } from "../../store/reviews.js";
+import { fetchSpotReviews, deleteReview, updateReview } from "../../store/reviews.js";
 import './SpotDetails.css'
 
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const [spot, setSpot] = useState(null);
-  const [reviews, setReviews] = useState([]);
+  const reviews = useSelector((state) => state.reviews[spotId] || []);
   const [isLoaded, setIsLoaded] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
   const userReviews = useSelector(state => state.reviews.userReviews);
@@ -21,6 +21,7 @@ const SpotDetails = () => {
   const [updatedReview, setUpdatedReview] = useState("");
   const [errors, setErrors] = useState([]);
   const [updatedStars, setUpdatedStars] = useState(1);
+  
 
 
   useEffect(() => {
@@ -47,28 +48,9 @@ const SpotDetails = () => {
   }, [spotId]);
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      setIsLoaded(false); 
+    dispatch(fetchSpotReviews(spotId));
+  }, [dispatch, spotId]);
 
-      try {
-        const response = await fetch(`/api/spots/${spotId}/reviews`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch review details"); 
-        }
-
-        const data = await response.json();
-        console.log("Fetched data: ", data); 
-        setReviews(data.Reviews); 
-
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-      }
-
-      setIsLoaded(true); 
-    };
-
-    fetchReviews();
-}, [spotId]);
 
 
 
@@ -170,26 +152,27 @@ const handleUpdate = (reviewId) => {
     </div>
 
     <div className="reviews">
-        {isLoaded ? (
-          reviews.length > 0 ? (
+    <h3>Reviews</h3>
+    {isLoaded ? (
+        reviews.length > 0 ? (
             reviews.map((review) => (
-              <div key={review.id} className="review">
-                <h4>{review.User?.firstName} {review.User?.lastName}</h4>
-                <p>
-                  {new Date(review.createdAt).toLocaleString('en-US', {
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </p>
-                <p>{review.review}</p>
+                <div key={review.id} className="review">
+                    <h4>{review.User?.firstName} {review.User?.lastName}</h4>
+                    <p>
+                        {new Date(review.createdAt).toLocaleString('en-US', {
+                            month: 'long',
+                            year: 'numeric',
+                        })}
+                    </p>
+                    <p><strong>{review.User?.username}:</strong> {review.review}</p>
 
-                {sessionUser && sessionUser.id === review.userId && (
-                  <>
-                  <button onClick={() => setReviewToDelete(review.id)}>Delete</button>
-                  <button onClick={() => { setReviewToEdit(review.id); setUpdatedReview(review.review); }}>Edit</button>
-                  </>
-                )}
-              </div>
+                    {sessionUser && sessionUser.id === review.userId && (
+                        <>
+                            <button onClick={() => setReviewToDelete(review.id)}>Delete</button>
+                            <button onClick={() => { setReviewToEdit(review.id); setUpdatedReview(review.review); }}>Edit</button>
+                        </>
+                    )}
+                </div>
             ))
           ) : (
             sessionUser && !spot.isOwner && <p>Be the first to post a review!</p>
