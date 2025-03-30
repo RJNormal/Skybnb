@@ -102,7 +102,7 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     const { user } = req;
 
 
-    const review = await Spot.findByPk(reviewId);
+    const review = await Review.findByPk(reviewId);
 
     if (!review) {
       return res.status(404).json({
