@@ -80,16 +80,13 @@ const handleDelete = (reviewId) => {
   setReviewToDelete(null);
 };
 
-const handleUpdate = async (reviewId) => {
-  await dispatch(updateReview(reviewId, { review: updatedReview, stars: updatedStars }));
-
-  
-  dispatch(fetchUserReviews());
-
-  
-  setReviewToEdit(null);
-  setUpdatedReview("");
-  setUpdatedStars(1);
+const handleUpdate = (reviewId) => {
+  dispatch(updateReview(reviewId, { review: updatedReview, stars: updatedStars }))
+    .then(() => {
+      setReviewToEdit(null);
+      setUpdatedReview("");
+      setUpdatedStars(1);
+    });
 };
 
   if (!isLoaded) return <h2>Loading...</h2>;
