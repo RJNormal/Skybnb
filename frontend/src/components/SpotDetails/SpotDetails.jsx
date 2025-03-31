@@ -12,7 +12,7 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spot.spot);
   const reviews = useSelector((state) => state.reviews[spotId] || []);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
   const userReviews = useSelector(state => state.reviews.userReviews);
   const dispatch = useDispatch()
@@ -26,7 +26,7 @@ const SpotDetails = () => {
 
 
   useEffect(() => {
-    dispatch(fetchSpot(spotId)); // Fetch the spot data when the component mounts
+    dispatch(fetchSpot(spotId)); 
   }, [dispatch, spotId]);
 
   useEffect(() => {
@@ -47,9 +47,13 @@ const handleDelete = (reviewId) => {
 const handleUpdate = (reviewId) => {
   dispatch(updateReview(reviewId, { review: updatedReview, stars: updatedStars }))
     .then(() => {
+      dispatch(fetchSpotReviews(spotId)); 
       setReviewToEdit(null);
       setUpdatedReview("");
       setUpdatedStars(1);
+    })
+    .catch((error) => {
+      setErrors([error.message]);
     });
 };
 
