@@ -12,6 +12,7 @@ const SpotsList = () => {
   
     useEffect(() => {
       dispatch(fetchSpots());
+      console.log("Here are spots", spots);
     }, [dispatch]);
   
  
@@ -32,10 +33,13 @@ const SpotsList = () => {
           className="spot-tile"
           onClick={() => navigate(`/spots/${spot.id}`)}
           title={spot.name} 
-        >
-         {spot.SpotImages?.map((image) => (
-          <img key={image.id} src={image.url} alt="Spot image" className="spot-thumbnail" />
-        ))}
+        ><div className="spot-thumbnail">
+        {spot.previewImage ? (
+          <img src={spot.previewImage} alt="Spot image" />
+        ) : (
+          <p>No images available</p>
+        )}
+      </div>
           <div className="tooltip">{spot.name}</div>
           <div className="spot-info">
             <p>{spot.city}, {spot.state}</p>

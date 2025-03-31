@@ -31,7 +31,7 @@ const SpotDetails = () => {
 
   useEffect(() => {
     dispatch(fetchSpotReviews(spotId));
-  }, [dispatch, spotId]);
+  }, [dispatch, spotId, reviews.length]); 
 
 
 
@@ -44,19 +44,17 @@ const handleDelete = (reviewId) => {
   setReviewToDelete(null);
 };
 
-const handleUpdate = (reviewId) => {
-  dispatch(updateReview(reviewId, { review: updatedReview, stars: updatedStars }))
-    .then(() => {
-      dispatch(fetchSpotReviews(spotId)); 
-      setReviewToEdit(null);
-      setUpdatedReview("");
-      setUpdatedStars(1);
-    })
-    .catch((error) => {
-      setErrors([error.message]);
-    });
+const handleUpdate = async (reviewId) => {
+  try {
+    await dispatch(updateReview(reviewId, { review: updatedReview, stars: updatedStars }));
+    await dispatch(fetchSpotReviews(spotId)); 
+    setReviewToEdit(null);
+    setUpdatedReview("");
+    setUpdatedStars(1);
+  } catch (error) {
+    setErrors([error.message]);
+  }
 };
-
   if (!isLoaded) return <h2>Loading...</h2>;
   if (!spot || Object.keys(spot).length === 0) return <h2>Spot not found</h2>;
   
@@ -166,7 +164,7 @@ const handleUpdate = (reviewId) => {
         )}
       </div>
 
-      {/* Modal for confirming review deletion */}
+
       {reviewToDelete && (
         <div className="modal">
           <div className="modal-content">
