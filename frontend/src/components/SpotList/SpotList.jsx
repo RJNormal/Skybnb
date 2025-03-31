@@ -33,7 +33,9 @@ const SpotsList = () => {
           onClick={() => navigate(`/spots/${spot.id}`)}
           title={spot.name} 
         >
-          <img src={spot.SpotImages?.[0]?.url || 'fallback-image.jpg'} alt={spot.name}  className="spot-thumbnail" />
+         {spot.SpotImages?.map((image) => (
+          <img key={image.id} src={image.url} alt="Spot image" className="spot-thumbnail" />
+        ))}
           <div className="tooltip">{spot.name}</div>
           <div className="spot-info">
             <p>{spot.city}, {spot.state}</p>
