@@ -28,6 +28,29 @@ export const fetchSpots = () => async (dispatch) => {
     return response;
   }
 
+  const SET_SPOT_DETAILS = "spots/SET_SPOT_DETAILS";
+
+const setSpotDetails = (spot) => ({
+  type: SET_SPOT_DETAILS,
+  payload: spot,
+});
+
+export const fetchSpot = (spotId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/spots/${spotId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch spot details");
+    }
+
+    const data = await response.json();
+    dispatch(setSpotDetails(data)); 
+  } catch (err) {
+    console.error("Error fetching spot:", err);
+  }
+};
+
+export { setSpotDetails };
+
 
 
 const CREATE_SPOT = "spots/CREATE_SPOT";
@@ -110,6 +133,11 @@ export const spotsReducer = (state = initialState, action) => {
 
     }
 
+    case SET_SPOT_DETAILS: {
+      const newState = { ...state, [action.payload.id]: action.payload };
+      return newState;
+    }
+
     case CREATE_SPOT: {
       const newState = { ...state, [action.payload.id]: action.payload };
       return newState;
@@ -120,6 +148,8 @@ export const spotsReducer = (state = initialState, action) => {
       delete newState[action.spotId];
       return newState;
     }
+
+    
 
     
 

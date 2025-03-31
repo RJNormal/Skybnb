@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReviewForm from "../ReviewManagement/ReviewForm";
 import { fetchSpotReviews, deleteReview, updateReview } from "../../store/reviews.js";
+import { fetchSpot } from "../../store/spots.js";
 import './SpotDetails.css'
 
 
 const SpotDetails = () => {
   const { spotId } = useParams();
-  const [spot, setSpot] = useState(null);
+  const spot = useSelector((state) => state.spot.spot);
   const reviews = useSelector((state) => state.reviews[spotId] || []);
   const [isLoaded, setIsLoaded] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
@@ -25,27 +26,8 @@ const SpotDetails = () => {
 
 
   useEffect(() => {
-    const fetchSpot = async () => {
-      setIsLoaded(false); 
-  
-      try {
-        const response = await fetch(`/api/spots/${spotId}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch spot details"); 
-        }
-  
-        const data = await response.json();
-        setSpot(data); 
-        console.log(data)
-      } catch (err) {
-        console.error("Error fetching spot:", err);
-      }
-  
-      setIsLoaded(true); 
-    };
-  
-    fetchSpot();
-  }, [spotId]);
+    dispatch(fetchSpot(spotId)); // Fetch the spot data when the component mounts
+  }, [dispatch, spotId]);
 
   useEffect(() => {
     dispatch(fetchSpotReviews(spotId));
@@ -92,31 +74,29 @@ const handleUpdate = (reviewId) => {
       <p>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</p>
       <p>{spot.description}</p>
 
-      
-
       <div className="callout-box">
-  <div className="callout-price">
-    <p><strong>${spot.price}</strong> / night</p>
-    <h2>
-      ⭐
-      {(() => {
-         if (spot.avgStarRating && spot.avgStarRating > 0) {
-          return Math.round(spot.avgStarRating * 10) / 10; 
-        } else {
-          return "New";
-        }
-      })()}
-      {(() => {
-        if (spot.numReviews > 0) {
-          return ` · ${spot.numReviews} ${spot.numReviews === 1 ? "Review" : "Reviews"}`;
-        } else {
-          return "";
-        }
-      })()}
-    </h2>
-  </div>
-  <button onClick={() => alert("Feature coming soon")}>Reserve</button>
-</div>
+        <div className="callout-price">
+          <p><strong>${spot.price}</strong> / night</p>
+          <h2>
+            ⭐
+            {(() => {
+              if (spot.avgStarRating && spot.avgStarRating > 0) {
+                return Math.round(spot.avgStarRating * 10) / 10;
+              } else {
+                return "New";
+              }
+            })()}
+            {(() => {
+              if (spot.numReviews > 0) {
+                return ` · ${spot.numReviews} ${spot.numReviews === 1 ? "Review" : "Reviews"}`;
+              } else {
+                return "";
+              }
+            })()}
+          </h2>
+        </div>
+        <button onClick={() => alert("Feature coming soon")}>Reserve</button>
+      </div>
 
    
 
